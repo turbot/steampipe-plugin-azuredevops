@@ -20,9 +20,13 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			Schema:      ConfigSchema,
 		},
 		TableMap: map[string]*plugin.Table{
-			"azuredevops_project":     tableAzureDevOpsProject(ctx),
-			"azuredevops_team":        tableAzureDevOpsTeam(ctx),
-			"azuredevops_team_member": tableAzureDevOpsTeamMember(ctx),
+			"azuredevops_project":        tableAzureDevOpsProject(ctx),
+			"azuredevops_team":           tableAzureDevOpsTeam(ctx),
+			"azuredevops_team_member":    tableAzureDevOpsTeamMember(ctx),
+			"azuredevops_pipeline":       tableAzureDevOpsPipeline(ctx),
+			"azuredevops_build":          tableAzureDevOpsBuild(ctx),
+			"azuredevops_release":        tableAzureDevOpsRelease(ctx),
+			"azuredevops_git_repository": tableAzureDevOpsGitRepository(ctx),
 		},
 	}
 	return p
