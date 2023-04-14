@@ -20,6 +20,7 @@ func tableAzureDevOpsBuildDefinition(_ context.Context) *plugin.Table {
 			Hydrate:       listBuildDefinitions,
 			KeyColumns: []*plugin.KeyColumn{
 				{Name: "id", Require: plugin.Optional},
+				{Name: "name", Require: plugin.Optional},
 				{Name: "project_id", Require: plugin.Optional},
 				{Name: "repository_id", Require: plugin.Optional},
 				{Name: "repository_type", Require: plugin.Optional},
@@ -210,6 +211,11 @@ func tableAzureDevOpsBuildDefinition(_ context.Context) *plugin.Table {
 				Hydrate:     getBuildDefinition,
 			},
 			{
+				Name:        "project",
+				Description: "A reference to the project.",
+				Type:        proto.ColumnType_JSON,
+			},
+			{
 				Name:        "properties",
 				Description: "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a TypeCode != TypeCode.Object) except for DBNull are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are returned as a String. Byte[] expected as base64 encoded string.",
 				Type:        proto.ColumnType_JSON,
@@ -337,8 +343,15 @@ func listBuildDefinitions(ctx context.Context, d *plugin.QueryData, h *plugin.Hy
 }
 
 func getBuildDefinition(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	definitionId := d.EqualsQuals["id"].GetInt64Value()
-	projectId := d.EqualsQuals["project_id"].GetStringValue()
+	var projectId string
+	var definitionId int
+	if h.Item != nil {
+		definitionId = *h.Item.(build.BuildDefinitionReference).Id
+		projectId = h.Item.(build.BuildDefinitionReference).Project.Id.String()
+	} else {
+		definitionId = int(d.EqualsQuals["id"].GetInt64Value())
+		projectId = d.EqualsQuals["project_id"].GetStringValue()
+	}
 
 	// Check if projectId is empty
 	if projectId == "" {
@@ -363,7 +376,7 @@ func getBuildDefinition(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 
 	definition, err := client.GetDefinition(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_build.getBuildDefinition", "api_error", err)
+		plugin.Logger(ctx).Error("azuredevops_build_definition.getBuildDefinition", "api_error", err)
 		return nil, err
 	}
 

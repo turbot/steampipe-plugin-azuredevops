@@ -10,16 +10,16 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
-func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
+func tableAzureDevOpsUser(_ context.Context) *plugin.Table {
 	return &plugin.Table{
-		Name:        "azuredevops_group",
-		Description: "Retrieve information about your groups.",
+		Name:        "azuredevops_user",
+		Description: "Retrieve information about your users.",
 		List: &plugin.ListConfig{
-			Hydrate: listGroups,
+			Hydrate: listUsers,
 		},
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("descriptor"),
-			Hydrate:    getGroup,
+			Hydrate:    getUser,
 		},
 		Columns: []*plugin.Column{
 			{
@@ -36,12 +36,12 @@ func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
 				Name:        "membership_state",
 				Description: "When true, the membership is active.",
 				Type:        proto.ColumnType_BOOL,
-				Hydrate:     getGroupMembershipState,
+				Hydrate:     getUserMembershipState,
 				Transform:   transform.FromValue(),
 			},
 			{
 				Name:        "domain",
-				Description: "This represents the name of the container of origin for a graph member. (For MSA this is Windows Live ID, for AD the name of the domain, for AAD the tenantID of the directory, for VSTS groups the ScopeId, etc).",
+				Description: "This represents the name of the container of origin for a graph member. (For MSA this is Windows Live ID, for AD the name of the domain, for AAD the tenantID of the directory, for VSTS users the ScopeId, etc).",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
@@ -50,13 +50,18 @@ func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 			},
 			{
-				Name:        "description",
-				Description: "A short phrase to help human readers disambiguate groups with similar names.",
+				Name:        "directory_alias",
+				Description: "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
 				Name:        "descriptor",
 				Description: "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "is_deleted_in_origin",
+				Description: "When true, the user has been deleted in the identity provider.",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
@@ -70,13 +75,18 @@ func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 			},
 			{
+				Name:        "meta_type",
+				Description: "The meta type of the user in the origin, such as member, guest, etc.",
+				Type:        proto.ColumnType_STRING,
+			},
+			{
 				Name:        "origin_id",
 				Description: "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
 				Name:        "subject_kind",
-				Description: "This field identifies the type of the graph subject (ex: Group, Scope, User).",
+				Description: "This field identifies the type of the graph subject (ex: User, Scope, User).",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
@@ -93,7 +103,7 @@ func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
 				Name:        "memberships",
 				Description: "Get all the memberships where this descriptor is a member in the relationship.",
 				Type:        proto.ColumnType_JSON,
-				Hydrate:     getGroupMemberships,
+				Hydrate:     getUserMemberships,
 				Transform:   transform.FromValue(),
 			},
 
@@ -108,37 +118,37 @@ func tableAzureDevOpsGroup(_ context.Context) *plugin.Table {
 	}
 }
 
-func listGroups(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listUsers(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	connection, err := getConnection(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.listGroups", "connection_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.listUsers", "connection_error", err)
 		return nil, err
 	}
 
 	client, err := graph.NewClient(ctx, connection)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.listGroups", "client_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.listUsers", "client_error", err)
 		return nil, err
 	}
 
-	input := graph.ListGroupsArgs{}
+	input := graph.ListUsersArgs{}
 
 	for {
-		groups, err := client.ListGroups(ctx, input)
+		users, err := client.ListUsers(ctx, input)
 		if err != nil {
-			plugin.Logger(ctx).Error("azuredevops_group.listGroups", "api_error", err)
+			plugin.Logger(ctx).Error("azuredevops_user.listUsers", "api_error", err)
 			return nil, err
 		}
 
-		for _, group := range *groups.GraphGroups {
-			d.StreamListItem(ctx, group)
+		for _, user := range *users.GraphUsers {
+			d.StreamListItem(ctx, user)
 
 			// Context can be cancelled due to manual cancellation or the limit has been hit
 			if d.RowsRemaining(ctx) == 0 {
 				return nil, nil
 			}
 		}
-		continuationToken := *groups.ContinuationToken
+		continuationToken := *users.ContinuationToken
 		if continuationToken[0] == "" {
 			break
 		}
@@ -148,7 +158,7 @@ func listGroups(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData)
 	return nil, nil
 }
 
-func getGroup(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+func getUser(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	descriptor := d.EqualsQuals["descriptor"].GetStringValue()
 
 	// Check if descriptor is empty
@@ -158,77 +168,77 @@ func getGroup(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 
 	connection, err := getConnection(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroup", "connection_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUser", "connection_error", err)
 		return nil, err
 	}
 
 	client, err := graph.NewClient(ctx, connection)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroup", "client_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUser", "client_error", err)
 		return nil, err
 	}
 
-	input := graph.GetGroupArgs{
-		GroupDescriptor: types.String(descriptor),
+	input := graph.GetUserArgs{
+		UserDescriptor: types.String(descriptor),
 	}
 
-	output, err := client.GetGroup(ctx, input)
+	output, err := client.GetUser(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroup", "api_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUser", "api_error", err)
 		return nil, err
 	}
 
 	return *output, nil
 }
 
-func getGroupMembershipState(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	group := h.Item.(graph.GraphGroup)
+func getUserMembershipState(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	user := h.Item.(graph.GraphUser)
 	connection, err := getConnection(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMembershipState", "connection_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMembershipState", "connection_error", err)
 		return nil, err
 	}
 
 	client, err := graph.NewClient(ctx, connection)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMembershipState", "client_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMembershipState", "client_error", err)
 		return nil, err
 	}
 
 	input := graph.GetMembershipStateArgs{
-		SubjectDescriptor: group.Descriptor,
+		SubjectDescriptor: user.Descriptor,
 	}
 
 	output, err := client.GetMembershipState(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMembershipState", "api_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMembershipState", "api_error", err)
 		return nil, err
 	}
 
 	return output.Active, nil
 }
 
-func getGroupMemberships(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	group := h.Item.(graph.GraphGroup)
+func getUserMemberships(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	user := h.Item.(graph.GraphUser)
 	connection, err := getConnection(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMemberships", "connection_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMemberships", "connection_error", err)
 		return nil, err
 	}
 
 	client, err := graph.NewClient(ctx, connection)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMemberships", "client_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMemberships", "client_error", err)
 		return nil, err
 	}
 
 	input := graph.ListMembershipsArgs{
-		SubjectDescriptor: group.Descriptor,
+		SubjectDescriptor: user.Descriptor,
 	}
 
 	output, err := client.ListMemberships(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("azuredevops_group.getGroupMemberships", "api_error", err)
+		plugin.Logger(ctx).Error("azuredevops_user.getUserMemberships", "api_error", err)
 		return nil, err
 	}
 

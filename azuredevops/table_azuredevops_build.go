@@ -19,12 +19,14 @@ func tableAzureDevOpsBuild(_ context.Context) *plugin.Table {
 			ParentHydrate: listProjects,
 			Hydrate:       listBuilds,
 			KeyColumns: []*plugin.KeyColumn{
+				{Name: "id", Require: plugin.Optional},
 				{Name: "project_id", Require: plugin.Optional},
 				{Name: "build_number", Require: plugin.Optional},
 				{Name: "reason", Require: plugin.Optional},
 				{Name: "status", Require: plugin.Optional},
 				{Name: "result", Require: plugin.Optional},
-				{Name: "deleted", Require: plugin.Optional},
+				{Name: "repository_id", Require: plugin.Optional},
+				{Name: "repository_type", Require: plugin.Optional},
 			},
 		},
 		Get: &plugin.GetConfig{
@@ -126,6 +128,18 @@ func tableAzureDevOpsBuild(_ context.Context) *plugin.Table {
 				Name:        "reason",
 				Description: "The reason that the build was created.",
 				Type:        proto.ColumnType_STRING,
+			},
+			{
+				Name:        "repository_id",
+				Description: "ID of the repository.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Repository.Id"),
+			},
+			{
+				Name:        "repository_type",
+				Description: "Type of the repository.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Repository.Type"),
 			},
 			{
 				Name:        "result",
@@ -314,6 +328,12 @@ func listBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 	if d.EqualsQuals["result"] != nil {
 		result := build.BuildResult(d.EqualsQuals["result"].GetStringValue())
 		input.ResultFilter = &result
+	}
+	if d.EqualsQuals["repository_id"] != nil {
+		input.RepositoryId = types.String(d.EqualsQuals["repository_id"].GetStringValue())
+	}
+	if d.EqualsQuals["repository_type"] != nil {
+		input.RepositoryType = types.String(d.EqualsQuals["repository_type"].GetStringValue())
 	}
 	if d.EqualsQuals["id"] != nil {
 		id := []int{int(d.EqualsQuals["id"].GetInt64Value())}
