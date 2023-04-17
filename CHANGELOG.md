@@ -15,4 +15,4 @@ _What's new?_
   - [azuredevops_serviceendpoint](https://hub.steampipe.io/plugins/turbot/azuredevops/tables/azuredevops_serviceendpoint)
   - [azuredevops_team](https://hub.steampipe.io/plugins/turbot/azuredevops/tables/azuredevops_team)
   - [azuredevops_team_member](https://hub.steampipe.io/plugins/turbot/azuredevops/tables/azuredevops_team_member)
-  - [azuredevops_git_repository_branch](https://hub.steampipe.io/plugins/turbot/azuredevops/tables/azuredevops_user)
+  - [azuredevops_user](https://hub.steampipe.io/plugins/turbot/azuredevops/tables/azuredevops_user)

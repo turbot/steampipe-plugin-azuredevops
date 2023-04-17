@@ -52,7 +52,7 @@ Run steampipe:
 steampipe query
 ```
 
-List your Azure DevOps project:
+List your Azure DevOps projects:
 
 ```sql
 select
