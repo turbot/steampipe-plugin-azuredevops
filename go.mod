@@ -57,6 +57,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
+	github.com/microsoft/azure-devops-go-api/azuredevops v1.0.0-b5 // indirect
 	github.com/mitchellh/go-homedir v1.0.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.0.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect

@@ -11,11 +11,13 @@ Use SQL to query projects, groups, builds and more from Azure DevOps.
 
 ## Quick start
 
-Install the plugin with [Steampipe](https://steampipe.io):
+Download and install the latest Azure DevOps plugin:
 
-```shell
+```bash
 steampipe plugin install azuredevops
 ```
+
+Configure your [credentials](https://hub.steampipe.io/plugins/turbot/azuredevops#credentials) and [config file](https://hub.steampipe.io/plugins/turbot/azuredevops#configuration).
 
 Configure the Organization URL and Personal Access Token in `~/.steampipe/config/azuredevops.spc`:
 
@@ -24,14 +26,23 @@ connection "azuredevops" {
   plugin = "azuredevops"
 
   # Azure DevOps Organization URL
-  # For more information on the Organization URL, please see https://learn.microsoft.com/en-us/azure/devops/extend/develop/work-with-urls?view=azure-devops&tabs=http.
-  # Can also be set with the AZDO_ORG_SERVICE_URL environment variable.
   # organization_url = "https://dev.azure.com/test"
 
   # Azure DevOps Personal Access Token
-  # For more information on the Personal Access Token, please see https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows.
-  # Can also be set with the AZDO_PERSONAL_ACCESS_TOKEN environment variable.
   # personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+}
+```
+
+Or through environment variables:
+
+```sh
+export AZDO_ORG_SERVICE_URL="https://dev.azure.com/test"
+export AZDO_PERSONAL_ACCESS_TOKEN="wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+```
+
+```hcl
+connection "azuredevops" {
+  plugin = "azuredevops"
 }
 ```
 
@@ -41,7 +52,7 @@ Run steampipe:
 steampipe query
 ```
 
-Query your project:
+List your Azure DevOps project:
 
 ```sql
 select

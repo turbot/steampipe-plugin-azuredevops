@@ -277,6 +277,14 @@ func tableAzureDevOpsBuild(_ context.Context) *plugin.Table {
 				Description: "Represents the result of validating a build request.",
 				Type:        proto.ColumnType_JSON,
 			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("BuildNumber"),
+			},
 		},
 	}
 }

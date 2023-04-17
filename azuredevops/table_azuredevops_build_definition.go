@@ -262,6 +262,14 @@ func tableAzureDevOpsBuildDefinition(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_JSON,
 				Hydrate:     getBuildDefinition,
 			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Name"),
+			},
 		},
 	}
 }

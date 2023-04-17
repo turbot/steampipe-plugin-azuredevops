@@ -19,6 +19,9 @@ func tableAzureDevOpsRelease(_ context.Context) *plugin.Table {
 			Hydrate: listReleases,
 			KeyColumns: []*plugin.KeyColumn{
 				{Name: "project_id", Require: plugin.Optional},
+				{Name: "name", Require: plugin.Optional},
+				{Name: "status", Require: plugin.Optional},
+				{Name: "id", Require: plugin.Optional},
 			},
 		},
 		Get: &plugin.GetConfig{
@@ -168,6 +171,14 @@ func tableAzureDevOpsRelease(_ context.Context) *plugin.Table {
 				Name:        "variables",
 				Description: "Gets or sets the dictionary of variables.",
 				Type:        proto.ColumnType_JSON,
+			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Name"),
 			},
 		},
 	}

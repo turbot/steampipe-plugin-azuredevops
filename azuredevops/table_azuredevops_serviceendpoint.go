@@ -9,6 +9,7 @@ import (
 	"github.com/turbot/go-kit/types"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
@@ -109,6 +110,14 @@ func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
 				Name:        "service_endpoint_project_references",
 				Description: "All other project references where the service endpoint is shared.",
 				Type:        proto.ColumnType_JSON,
+			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Name"),
 			},
 		},
 	}

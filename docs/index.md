@@ -2,7 +2,7 @@
 organization: Turbot
 category: ["saas"]
 icon_url: "/images/plugins/turbot/azuredevops.svg"
-brand_color: "#0090f1"
+brand_color: "#0090F1"
 display_name: "Azure DevOps"
 short_name: "azuredevops"
 description: "Steampipe plugin to query projects, groups, builds and more from Azure DevOps."
@@ -16,7 +16,7 @@ og_image: "/images/plugins/turbot/azuredevops-social-graphic.png"
 
 [Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
 
-Get Azure DevOps project details:
+List your Azure DevOps projects:
 
 ```sql
 select
@@ -41,15 +41,24 @@ from
 
 - **[Table definitions & examples →](/plugins/turbot/azuredevops/tables)**
 
-## Get started
+## Quick start
 
 ### Install
 
 Download and install the latest Azure DevOps plugin:
 
-```bash
+```sh
 steampipe plugin install azuredevops
 ```
+
+### Credentials
+
+| Item        | Description                                                                                                                                                                                                                                                                                                                                           |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Credentials | Azure DevOps requires an [Organization URL](https://learn.microsoft.com/en-us/azure/devops/extend/develop/work-with-urls?view=azure-devops&tabs=http) and a [Personal Access Token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) for all requests. |
+| Permissions | Personal Access Tokens have the same permissions as the user who creates them, and if the user permissions change, the Personal Access Token permissions also change.                                                                                                                                                                                 |
+| Radius      | Each connection represents a single Azure DevOps Installation.                                                                                                                                                                                                                                                                                         |
+| Resolution  | 1. Credentials explicitly set in a steampipe config file (`~/.steampipe/config/azuredevops.spc`)<br />2. Credentials specified in environment variables, e.g., `AZDO_ORG_SERVICE_URL` and `AZDO_PERSONAL_ACCESS_TOKEN`.                                                                                                                               |
 
 ### Configuration
 
@@ -71,8 +80,12 @@ connection "azuredevops" {
 }
 ```
 
-- `organization_url` - Azure DevOps Organization URL. Can also be set with the `AZDO_ORG_SERVICE_URL` environment variable.
-- `personal_access_token` - Azure DevOps Personal Access Token. Can also be set with the `AZDO_PERSONAL_ACCESS_TOKEN` environment variable.
+Alternatively, you can also use the Azure DevOps environment variables to obtain credentials **only if other arguments (`organization_url` and `personal_access_token`) are not specified** in the connection:
+
+```sh
+export AZDO_ORG_SERVICE_URL="https://dev.azure.com/test"
+export AZDO_PERSONAL_ACCESS_TOKEN="wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+```
 
 ## Get involved
 

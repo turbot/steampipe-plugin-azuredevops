@@ -68,6 +68,14 @@ func tableAzureDevOpsPipeline(_ context.Context) *plugin.Table {
 				Description: "The class to represent a collection of REST reference links.",
 				Type:        proto.ColumnType_JSON,
 			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Name"),
+			},
 		},
 	}
 }

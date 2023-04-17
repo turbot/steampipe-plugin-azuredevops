@@ -96,6 +96,14 @@ func tableAzureDevOpsGitRepository(_ context.Context) *plugin.Table {
 				Description: "The repository valid remote urls.",
 				Type:        proto.ColumnType_JSON,
 			},
+
+			/// Steampipe standard columns
+			{
+				Name:        "title",
+				Description: "Title of the resource.",
+				Type:        proto.ColumnType_STRING,
+				Transform:   transform.FromField("Name"),
+			},
 		},
 	}
 }
