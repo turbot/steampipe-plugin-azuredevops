@@ -53,12 +53,12 @@ steampipe plugin install azuredevops
 
 ### Credentials
 
-| Item        | Description                                                                                                                                                                                                                                                                                                                                           |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Item        | Description                                                                                                                                                                                                                                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Credentials | Azure DevOps requires an [Organization URL](https://learn.microsoft.com/en-us/azure/devops/extend/develop/work-with-urls?view=azure-devops&tabs=http) and a [Personal Access Token](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) for all requests. |
-| Permissions | Personal Access Tokens have the same permissions as the user who creates them, and if the user permissions change, the Personal Access Token permissions also change.                                                                                                                                                                                 |
+| Permissions | Personal Access Tokens have the same permissions as the user who creates them, and if the user permissions change, the Personal Access Token permissions also change.                                                                                                                                                                                  |
 | Radius      | Each connection represents a single Azure DevOps Installation.                                                                                                                                                                                                                                                                                         |
-| Resolution  | 1. Credentials explicitly set in a steampipe config file (`~/.steampipe/config/azuredevops.spc`)<br />2. Credentials specified in environment variables, e.g., `AZDO_ORG_SERVICE_URL` and `AZDO_PERSONAL_ACCESS_TOKEN`.                                                                                                                               |
+| Resolution  | 1. Credentials explicitly set in a steampipe config file (`~/.steampipe/config/azuredevops.spc`)<br />2. Credentials specified in environment variables, e.g., `AZDO_ORG_SERVICE_URL` and `AZDO_PERSONAL_ACCESS_TOKEN`.                                                                                                                                |
 
 ### Configuration
 
@@ -80,7 +80,24 @@ connection "azuredevops" {
 }
 ```
 
-Alternatively, you can also use the Azure DevOps environment variables to obtain credentials **only if other arguments (`organization_url` and `personal_access_token`) are not specified** in the connection:
+## Configuring AzureDevOps Credentials
+
+You may specify the Organization URL and Personal Access Token to authenticate:
+
+- `organization_url` - Azure DevOps Organization URL.
+- `personal_access_token` - Azure DevOps Personal Access Token.
+
+```hcl
+connection "azuredevops" {
+  plugin = "azuredevops"
+  organization_url = "https://dev.azure.com/test"
+  personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+}
+```
+
+Or through environment variables:
+
+The AzureDevOps plugin will use the Azure DevOps environment variables to obtain credentials **only if other arguments (`organization_url` and `personal_access_token`) are not specified** in the connection:
 
 ```sh
 export AZDO_ORG_SERVICE_URL="https://dev.azure.com/test"

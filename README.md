@@ -21,15 +21,16 @@ Configure your [credentials](https://hub.steampipe.io/plugins/turbot/azuredevops
 
 Configure the Organization URL and Personal Access Token in `~/.steampipe/config/azuredevops.spc`:
 
+You may specify the Organization URL and Personal Access Token to authenticate:
+
+- `organization_url` - Azure DevOps Organization URL.
+- `personal_access_token` - Azure DevOps Personal Access Token.
+
 ```hcl
 connection "azuredevops" {
   plugin = "azuredevops"
-
-  # Azure DevOps Organization URL
-  # organization_url = "https://dev.azure.com/test"
-
-  # Azure DevOps Personal Access Token
-  # personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+  organization_url = "https://dev.azure.com/test"
+  personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
 }
 ```
 
@@ -38,12 +39,6 @@ Or through environment variables:
 ```sh
 export AZDO_ORG_SERVICE_URL="https://dev.azure.com/test"
 export AZDO_PERSONAL_ACCESS_TOKEN="wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
-```
-
-```hcl
-connection "azuredevops" {
-  plugin = "azuredevops"
-}
 ```
 
 Run steampipe:
