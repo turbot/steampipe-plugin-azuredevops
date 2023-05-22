@@ -34,6 +34,22 @@ where
   is_team_admin;
 ```
 
+### List deleted team members
+
+```sql
+select
+  id,
+  display_name,
+  is_team_admin,
+  project_id,
+  team_id,
+  url
+from
+  azuredevops_team_member
+where
+  is_deleted_in_origin;
+```
+
 ### List team members of a particular project
 
 ```sql

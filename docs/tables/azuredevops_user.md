@@ -51,6 +51,21 @@ where
   origin = 'aad';
 ```
 
+### List the users that have been deleted in the identity provider
+
+```sql
+select
+  principal_name,
+  display_name,
+  membership_state,
+  domain,
+  origin
+from
+  azuredevops_user
+where
+  is_deleted_in_origin;
+```
+
 ### List users who are part of `Project Collection Administrators` group
 
 ```sql

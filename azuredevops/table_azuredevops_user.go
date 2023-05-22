@@ -86,7 +86,7 @@ func tableAzureDevOpsUser(_ context.Context) *plugin.Table {
 			},
 			{
 				Name:        "subject_kind",
-				Description: "This field identifies the type of the graph subject (ex: User, Scope, User).",
+				Description: "This field identifies the type of the graph subject (ex: Group, Scope, User).",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
