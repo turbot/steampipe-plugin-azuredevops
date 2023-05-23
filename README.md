@@ -29,6 +29,7 @@ You may specify the Organization URL and Personal Access Token to authenticate:
 ```hcl
 connection "azuredevops" {
   plugin = "azuredevops"
+  # Authentication information
   organization_url = "https://dev.azure.com/test"
   personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
 }

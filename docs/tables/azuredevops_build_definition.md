@@ -82,7 +82,7 @@ where
   repository_id is null;
 ```
 
-### Get author details of a particular build definition
+### Get the author details of a particular build definition
 
 ```sql
 select

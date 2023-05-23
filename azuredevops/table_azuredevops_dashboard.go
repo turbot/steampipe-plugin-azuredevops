@@ -26,7 +26,7 @@ func tableAzureDevOpsDashboard(_ context.Context) *plugin.Table {
 		Columns: []*plugin.Column{
 			{
 				Name:        "id",
-				Description: "ID of the Dashboard. Provided by service at creation time.",
+				Description: "ID of the dashboard. Provided by service at creation time.",
 				Type:        proto.ColumnType_STRING,
 			},
 			{

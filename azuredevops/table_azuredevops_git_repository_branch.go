@@ -33,7 +33,7 @@ func tableAzureDevOpsGitRepositoryBranch(_ context.Context) *plugin.Table {
 			},
 			{
 				Name:        "repository_id",
-				Description: "The repository id.",
+				Description: "The repository ID.",
 				Type:        proto.ColumnType_STRING,
 			},
 			{
