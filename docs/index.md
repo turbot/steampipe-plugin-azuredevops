@@ -64,6 +64,8 @@ steampipe plugin install azuredevops
 
 Installing the latest azuredevops plugin will create a config file (`~/.steampipe/config/azuredevops.spc`) with a single connection named `azuredevops`:
 
+Configure your account details in `~/.steampipe/config/azuredevops.spc`:
+
 ```hcl
 connection "azuredevops" {
   plugin = "azuredevops"
@@ -80,28 +82,11 @@ connection "azuredevops" {
 }
 ```
 
-## Configuring AzureDevOps Credentials
-
-You may specify the Organization URL and Personal Access Token to authenticate:
-
-- `organization_url` - Azure DevOps Organization URL.
-- `personal_access_token` - Azure DevOps Personal Access Token.
-
-```hcl
-connection "azuredevops" {
-  plugin = "azuredevops"
-  organization_url = "https://dev.azure.com/test"
-  personal_access_token = "wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
-}
-```
-
-Or through environment variables:
-
-The AzureDevOps plugin will use the Azure DevOps environment variables to obtain credentials **only if other arguments (`organization_url` and `personal_access_token`) are not specified** in the connection:
+Alternatively, you can also use the standard Azure DevOps environment variables to obtain credentials **only if other arguments (`organization_url` and `personal_access_token`) are not specified** in the connection:
 
 ```sh
-export AZDO_ORG_SERVICE_URL="https://dev.azure.com/test"
-export AZDO_PERSONAL_ACCESS_TOKEN="wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2"
+export AZDO_ORG_SERVICE_URL=https://dev.azure.com/test
+export AZDO_PERSONAL_ACCESS_TOKEN=wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2
 ```
 
 ## Get involved
