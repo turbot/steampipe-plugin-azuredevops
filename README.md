@@ -6,7 +6,7 @@ Use SQL to query projects, groups, builds and more from Azure DevOps.
 
 - **[Get started →](https://hub.steampipe.io/plugins/turbot/azuredevops)**
 - Documentation: [Table definitions & examples](https://hub.steampipe.io/plugins/turbot/azuredevops/tables)
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
 - Get involved: [Issues](https://github.com/turbot/steampipe-plugin-azuredevops/issues)
 
 ## Quick start
