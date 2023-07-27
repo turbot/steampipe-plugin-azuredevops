@@ -92,4 +92,4 @@ export AZDO_PERSONAL_ACCESS_TOKEN=wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65
 ## Get involved
 
 - Open source: https://github.com/turbot/steampipe-plugin-azuredevops
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
