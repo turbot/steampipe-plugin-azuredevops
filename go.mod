@@ -3,7 +3,7 @@ module github.com/turbot/steampipe-plugin-azuredevops
 go 1.19
 
 require (
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.3.1
 	github.com/microsoft/azure-devops-go-api/azuredevops/v6 v6.0.1
 	github.com/turbot/go-kit v0.5.0
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.4.1
