@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/microsoft/azure-devops-go-api/azuredevops/v6 v6.0.1
 	github.com/turbot/go-kit v0.8.0-rc.0
-	github.com/turbot/steampipe-plugin-sdk/v5 v5.6.1
+	github.com/turbot/steampipe-plugin-sdk/v5 v5.6.2
 )
 
 require (
