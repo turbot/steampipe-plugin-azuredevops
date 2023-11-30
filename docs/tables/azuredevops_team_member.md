@@ -1,10 +1,20 @@
-# Table: azuredevops_team_member
+---
+title: "Steampipe Table: azuredevops_team_member - Query Azure DevOps Team Members using SQL"
+description: "Allows users to query Team Members in Azure DevOps, specifically the members' details, providing insights into team structure and roles."
+---
 
-Represents Azure DevOps team members. By default, team members inherit the permissions afforded to members of the project Contributors group. Members of this group can add and modify source code, create and delete test runs, and create and modify work items. Team members can collaborate on a Git project or check in work to the team's code base.
+# Table: azuredevops_team_member - Query Azure DevOps Team Members using SQL
+
+Azure DevOps is a service within Microsoft Azure that supports development teams with version control, reporting, requirements management, project management, automated builds, lab management, testing, and release management capabilities. It provides a rich ecosystem for managing multi-stage, multi-environment, and multi-provider pipelines. Team Members in Azure DevOps are individuals who are part of a particular team, and their details, roles, and permissions can be managed and queried.
+
+## Table Usage Guide
+
+The `azuredevops_team_member` table provides insights into team members within Azure DevOps. As a project manager or team lead, explore member-specific details through this table, including roles, permissions, and associated metadata. Utilize it to manage and understand team structure, roles, and permissions, and to ensure the right individuals have access to the right resources.
 
 ## Examples
 
 ### Basic info
+Explore which team members hold administrative roles within your Azure DevOps project. This query could be beneficial for management or auditing purposes, providing a quick overview of team structures and roles in the project.
 
 ```sql
 select
@@ -19,6 +29,7 @@ from
 ```
 
 ### List team members who are admins
+Explore which team members hold admin status in your Azure DevOps setup. This can help manage permissions and roles within your projects.
 
 ```sql
 select
@@ -35,6 +46,7 @@ where
 ```
 
 ### List deleted team members
+Discover the segments that include team members who have been removed from your Azure DevOps team. This can be useful for auditing changes to team composition or identifying potential security issues.
 
 ```sql
 select
@@ -51,6 +63,7 @@ where
 ```
 
 ### List team members of a particular project
+Explore which team members are part of a specific project in Azure DevOps. This is useful for project managers who need to quickly understand the composition of their project team, including who the team admin is.
 
 ```sql
 select
@@ -68,6 +81,7 @@ where
 ```
 
 ### List team members of a particular team
+Explore which team members belong to a specific team in Azure DevOps, and determine their roles within the team. This can be particularly useful in understanding team composition and identifying team administrators.
 
 ```sql
 select
