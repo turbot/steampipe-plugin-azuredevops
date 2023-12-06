@@ -16,7 +16,19 @@ The `azuredevops_pipeline` table provides insights into pipelines within Azure D
 ### Basic info
 Explore which Azure DevOps pipelines are currently active, identifying their unique identifiers and names. This can be particularly useful for project managers and developers to gain insights into the status and revision history of their ongoing projects.
 
-```sql
+```sql+postgres
+select
+  id,
+  name,
+  configuration_type,
+  project_id,
+  folder,
+  revision
+from
+  azuredevops_pipeline;
+```
+
+```sql+sqlite
 select
   id,
   name,
@@ -31,7 +43,21 @@ from
 ### List yaml based pipelines
 Explore which Azure DevOps pipelines are based on YAML configurations. This can be useful in identifying pipelines that follow this specific format for potential updates or troubleshooting.
 
-```sql
+```sql+postgres
+select
+  id,
+  name,
+  configuration_type,
+  project_id,
+  folder,
+  revision
+from
+  azuredevops_pipeline
+where
+  configuration_type = 'yaml';
+```
+
+```sql+sqlite
 select
   id,
   name,
@@ -48,7 +74,23 @@ where
 ### List pipelines associated with a particular project
 Explore which pipelines are associated with a specific project in Azure DevOps. This is useful for managing and organizing project resources efficiently.
 
-```sql
+```sql+postgres
+select
+  l.id as pipeline_id,
+  l.name as pipeline_name,
+  configuration_type,
+  project_id,
+  folder,
+  l.revision
+from
+  azuredevops_pipeline as l,
+  azuredevops_project as p
+where
+  l.project_id = p.id
+  and p.name = 'private_project';
+```
+
+```sql+sqlite
 select
   l.id as pipeline_id,
   l.name as pipeline_name,

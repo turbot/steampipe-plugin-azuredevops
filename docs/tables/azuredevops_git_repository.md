@@ -16,7 +16,19 @@ The `azuredevops_git_repository` table provides insights into Git Repositories w
 ### Basic info
 Gain insights into the general information of your AzureDevOps Git repositories, such as whether they are forks or not and their size. This can help with project management and resource allocation.
 
-```sql
+```sql+postgres
+select
+  id,
+  name,
+  default_branch,
+  is_fork,
+  project_id,
+  size
+from
+  azuredevops_git_repository;
+```
+
+```sql+sqlite
 select
   id,
   name,
@@ -31,7 +43,21 @@ from
 ### List forked repositories
 Explore which repositories in your Azure DevOps have been forked. This can help identify duplicated or shared project resources, aiding in project management and resource allocation.
 
-```sql
+```sql+postgres
+select
+  id,
+  name,
+  default_branch,
+  is_fork,
+  project_id,
+  size
+from
+  azuredevops_git_repository
+where
+  is_fork;
+```
+
+```sql+sqlite
 select
   id,
   name,
@@ -48,7 +74,7 @@ where
 ### List repositories of a particular project
 Explore the different repositories associated with a specific project to gain insights into their default branches, size, and whether they are a fork of another repository. This is useful for managing and understanding the structure of a particular project in Azure DevOps.
 
-```sql
+```sql+postgres
 select
   id,
   name,
@@ -60,4 +86,18 @@ from
   azuredevops_git_repository
 where
   project ->> 'name' = 'private_project';
+```
+
+```sql+sqlite
+select
+  id,
+  name,
+  default_branch,
+  is_fork,
+  project_id,
+  size
+from
+  azuredevops_git_repository
+where
+  json_extract(project, '$.name') = 'private_project';
 ```

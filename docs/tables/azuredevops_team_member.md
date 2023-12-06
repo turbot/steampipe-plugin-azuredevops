@@ -16,7 +16,19 @@ The `azuredevops_team_member` table provides insights into team members within A
 ### Basic info
 Explore which team members hold administrative roles within your Azure DevOps project. This query could be beneficial for management or auditing purposes, providing a quick overview of team structures and roles in the project.
 
-```sql
+```sql+postgres
+select
+  id,
+  display_name,
+  is_team_admin,
+  project_id,
+  team_id,
+  url
+from
+  azuredevops_team_member;
+```
+
+```sql+sqlite
 select
   id,
   display_name,
@@ -31,7 +43,21 @@ from
 ### List team members who are admins
 Explore which team members hold admin status in your Azure DevOps setup. This can help manage permissions and roles within your projects.
 
-```sql
+```sql+postgres
+select
+  id,
+  display_name,
+  is_team_admin,
+  project_id,
+  team_id,
+  url
+from
+  azuredevops_team_member
+where
+  is_team_admin;
+```
+
+```sql+sqlite
 select
   id,
   display_name,
@@ -48,7 +74,21 @@ where
 ### List deleted team members
 Discover the segments that include team members who have been removed from your Azure DevOps team. This can be useful for auditing changes to team composition or identifying potential security issues.
 
-```sql
+```sql+postgres
+select
+  id,
+  display_name,
+  is_team_admin,
+  project_id,
+  team_id,
+  url
+from
+  azuredevops_team_member
+where
+  is_deleted_in_origin;
+```
+
+```sql+sqlite
 select
   id,
   display_name,
@@ -65,7 +105,22 @@ where
 ### List team members of a particular project
 Explore which team members are part of a specific project in Azure DevOps. This is useful for project managers who need to quickly understand the composition of their project team, including who the team admin is.
 
-```sql
+```sql+postgres
+select
+  m.id as member_id,
+  display_name,
+  is_team_admin,
+  project_id,
+  team_id
+from
+  azuredevops_team_member as m,
+  azuredevops_project as p
+where
+  m.project_id = p.id
+  and p.name = 'private_project';
+```
+
+```sql+sqlite
 select
   m.id as member_id,
   display_name,
@@ -83,7 +138,7 @@ where
 ### List team members of a particular team
 Explore which team members belong to a specific team in Azure DevOps, and determine their roles within the team. This can be particularly useful in understanding team composition and identifying team administrators.
 
-```sql
+```sql+postgres
 select
   m.id as member_id,
   display_name,
@@ -95,4 +150,18 @@ from
 where
   m.team_id = t.id
   and t.name = 'private_project Team';
+```
+
+```sql+sqlite
+select
+  m.id as member_id,
+  display_name,
+  is_team_admin,
+  team_id
+from
+  azuredevops_team_member as m
+join
+  azuredevops_team as t on m.team_id = t.id
+where
+  t.name = 'private_project Team';
 ```

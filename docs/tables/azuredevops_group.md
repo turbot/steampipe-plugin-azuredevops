@@ -16,7 +16,19 @@ The `azuredevops_group` table provides insights into groups within Azure DevOps.
 ### Basic info
 Explore which Azure DevOps groups are active within your domain. This is useful for understanding user access and permissions within your organization.
 
-```sql
+```sql+postgres
+select
+  principal_name,
+  display_name,
+  membership_state,
+  domain,
+  origin,
+  description
+from
+  azuredevops_group;
+```
+
+```sql+sqlite
 select
   principal_name,
   display_name,
@@ -31,7 +43,21 @@ from
 ### List inactive groups
 Identify groups within your Azure DevOps that are currently inactive. This could be useful for optimizing resource use, ensuring security, or maintaining an organized workspace.
 
-```sql
+```sql+postgres
+select
+  principal_name,
+  display_name,
+  membership_state,
+  domain,
+  origin,
+  description
+from
+  azuredevops_group
+where
+  not membership_state;
+```
+
+```sql+sqlite
 select
   principal_name,
   display_name,
@@ -48,7 +74,21 @@ where
 ### List empty groups
 Discover the segments that are classified as empty groups in the Azure DevOps platform. This can be useful to identify and clean up unused or redundant groups, enhancing the efficiency of your resource management.
 
-```sql
+```sql+postgres
+select
+  principal_name,
+  display_name,
+  membership_state,
+  domain,
+  origin,
+  description
+from
+  azuredevops_group
+where
+  memberships = '[]';
+```
+
+```sql+sqlite
 select
   principal_name,
   display_name,
@@ -65,7 +105,7 @@ where
 ### Get parent group detail of a particular group
 Determine the parent group details associated with a specific group in Azure DevOps. This can be useful for understanding group hierarchies and membership states, especially when managing user access and permissions.
 
-```sql
+```sql+postgres
 select
   principal_name,
   display_name,
@@ -83,6 +123,29 @@ where
     from
       azuredevops_group,
       jsonb_array_elements(memberships) as m
+    where
+      display_name = 'Build Administrators'
+  );
+```
+
+```sql+sqlite
+select
+  principal_name,
+  display_name,
+  membership_state,
+  domain,
+  origin,
+  description
+from
+  azuredevops_group
+where
+  descriptor in
+  (
+    select
+      json_extract(m.value, '$.containerDescriptor')
+    from
+      azuredevops_group,
+      json_each(memberships) as m
     where
       display_name = 'Build Administrators'
   );
