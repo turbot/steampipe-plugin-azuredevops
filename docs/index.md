@@ -8,6 +8,7 @@ short_name: "azuredevops"
 description: "Steampipe plugin to query projects, groups, builds and more from Azure DevOps."
 og_description: "Query Azure DevOps with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/turbot/azuredevops-social-graphic.png"
+engines: ["steampipe", "sqlite", "postgres", "export"]
 ---
 
 # Azure DevOps + Steampipe
