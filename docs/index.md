@@ -90,7 +90,4 @@ export AZDO_ORG_SERVICE_URL=https://dev.azure.com/test
 export AZDO_PERSONAL_ACCESS_TOKEN=wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2
 ```
 
-## Get involved
 
-- Open source: https://github.com/turbot/steampipe-plugin-azuredevops
-- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
