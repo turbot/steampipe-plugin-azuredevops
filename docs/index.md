@@ -15,7 +15,7 @@ engines: ["steampipe", "sqlite", "postgres", "export"]
 
 [Azure DevOps](https://dev.azure.com) is a software as a service (SaaS) platform that provides DevOps practices and tools for the end-to-end software life cycle.
 
-[Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
+[Steampipe](https://steampipe.io) is an open-source zero-ETL engine to instantly query cloud APIs using SQL.
 
 List your Azure DevOps projects:
 
