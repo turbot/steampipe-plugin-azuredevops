@@ -8,13 +8,14 @@ short_name: "azuredevops"
 description: "Steampipe plugin to query projects, groups, builds and more from Azure DevOps."
 og_description: "Query Azure DevOps with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/turbot/azuredevops-social-graphic.png"
+engines: ["steampipe", "sqlite", "postgres", "export"]
 ---
 
 # Azure DevOps + Steampipe
 
-[Azure DevOps](https://dev.azure.com) is a software as a service (SaaS) platform that provides DevOps practices and tools for the end-to-end software life cycle.
+[Steampipe](https://steampipe.io) is an open-source zero-ETL engine to instantly query cloud APIs using SQL.
 
-[Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
+[Azure DevOps](https://dev.azure.com) is a software as a service (SaaS) platform that provides DevOps practices and tools for the end-to-end software life cycle.
 
 List your Azure DevOps projects:
 
@@ -88,8 +89,3 @@ Alternatively, you can also use the standard Azure DevOps environment variables 
 export AZDO_ORG_SERVICE_URL=https://dev.azure.com/test
 export AZDO_PERSONAL_ACCESS_TOKEN=wf3hahidy7i7fkzmeqr3e6fbjwuspabpo766grp7hl4o65v2
 ```
-
-## Get involved
-
-- Open source: https://github.com/turbot/steampipe-plugin-azuredevops
-- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
