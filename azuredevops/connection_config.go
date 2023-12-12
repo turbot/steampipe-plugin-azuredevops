@@ -7,21 +7,11 @@ import (
 
 	"github.com/microsoft/azure-devops-go-api/azuredevops/v6"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/schema"
 )
 
 type azureDevOpsConfig struct {
-	OrganizationURL     *string `cty:"organization_url"`
-	PersonalAccessToken *string `cty:"personal_access_token"`
-}
-
-var ConfigSchema = map[string]*schema.Attribute{
-	"organization_url": {
-		Type: schema.TypeString,
-	},
-	"personal_access_token": {
-		Type: schema.TypeString,
-	},
+	OrganizationURL     *string `hcl:"organization_url"`
+	PersonalAccessToken *string `hcl:"personal_access_token"`
 }
 
 func ConfigInstance() interface{} {
