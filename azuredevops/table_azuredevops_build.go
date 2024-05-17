@@ -33,7 +33,7 @@ func tableAzureDevOpsBuild(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"id", "project_id"}),
 			Hydrate:    getBuild,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "The ID of the build.",
@@ -285,7 +285,7 @@ func tableAzureDevOpsBuild(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("BuildNumber"),
 			},
-		},
+		}),
 	}
 }
 

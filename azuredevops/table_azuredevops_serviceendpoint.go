@@ -30,7 +30,7 @@ func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"id", "project_id"}),
 			Hydrate:    getServiceEndpoint,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "Gets the identifier of this endpoint.",
@@ -119,7 +119,7 @@ func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 

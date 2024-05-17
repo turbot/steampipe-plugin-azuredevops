@@ -21,7 +21,7 @@ func tableAzureDevOpsTeam(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"id", "project_id"}),
 			Hydrate:    getTeam,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "Team (Identity) Guid. A Team Foundation ID.",
@@ -70,7 +70,7 @@ func tableAzureDevOpsTeam(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 

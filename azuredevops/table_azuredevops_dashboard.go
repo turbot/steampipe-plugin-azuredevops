@@ -23,7 +23,7 @@ func tableAzureDevOpsDashboard(_ context.Context) *plugin.Table {
 				{Name: "group_id", Require: plugin.Optional},
 			},
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "ID of the dashboard. Provided by service at creation time.",
@@ -98,7 +98,7 @@ func tableAzureDevOpsDashboard(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 

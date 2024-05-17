@@ -21,7 +21,7 @@ func tableAzureDevOpsUser(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.SingleColumn("descriptor"),
 			Hydrate:    getUser,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "principal_name",
 				Description: "This is the PrincipalName of this graph member from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph member by VSTS.",
@@ -114,7 +114,7 @@ func tableAzureDevOpsUser(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("DisplayName"),
 			},
-		},
+		}),
 	}
 }
 

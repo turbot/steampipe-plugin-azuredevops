@@ -19,7 +19,7 @@ func tableAzureDevOpsTeamMember(_ context.Context) *plugin.Table {
 			ParentHydrate: listTeams,
 			Hydrate:       listTeamMembers,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "The member id.",
@@ -73,7 +73,7 @@ func tableAzureDevOpsTeamMember(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("DisplayName"),
 			},
-		},
+		}),
 	}
 }
 
