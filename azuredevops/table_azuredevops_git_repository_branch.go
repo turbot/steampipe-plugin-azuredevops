@@ -25,7 +25,7 @@ func tableAzureDevOpsGitRepositoryBranch(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"name", "repository_id"}),
 			Hydrate:    getRepositoryBranch,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "name",
 				Description: "Name of the ref.",
@@ -64,7 +64,7 @@ func tableAzureDevOpsGitRepositoryBranch(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 

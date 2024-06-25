@@ -26,7 +26,7 @@ func tableAzureDevOpsPipeline(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"id", "project_id"}),
 			Hydrate:    getPipeline,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "Pipeline ID.",
@@ -76,7 +76,7 @@ func tableAzureDevOpsPipeline(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 

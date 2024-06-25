@@ -15,6 +15,12 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 		ConnectionConfigSchema: &plugin.ConnectionConfigSchema{
 			NewInstance: ConfigInstance,
 		},
+		ConnectionKeyColumns: []plugin.ConnectionKeyColumn{
+			{
+				Name:    "organization",
+				Hydrate: getOrganization,
+			},
+		},
 		TableMap: map[string]*plugin.Table{
 			"azuredevops_build":                 tableAzureDevOpsBuild(ctx),
 			"azuredevops_build_definition":      tableAzureDevOpsBuildDefinition(ctx),

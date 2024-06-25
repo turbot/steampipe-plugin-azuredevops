@@ -31,7 +31,7 @@ func tableAzureDevOpsBuildDefinition(_ context.Context) *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"id", "project_id"}),
 			Hydrate:    getBuildDefinition,
 		},
-		Columns: []*plugin.Column{
+		Columns: commonColumns([]*plugin.Column{
 			{
 				Name:        "id",
 				Description: "The ID of the referenced definition.",
@@ -270,7 +270,7 @@ func tableAzureDevOpsBuildDefinition(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Name"),
 			},
-		},
+		}),
 	}
 }
 
