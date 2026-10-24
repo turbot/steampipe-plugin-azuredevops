@@ -25,6 +25,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"azuredevops_build":                 tableAzureDevOpsBuild(ctx),
 			"azuredevops_build_definition":      tableAzureDevOpsBuildDefinition(ctx),
 			"azuredevops_dashboard":             tableAzureDevOpsDashboard(ctx),
+			"azuredevops_git_item":              tableAzureDevOpsGitItem(ctx),
 			"azuredevops_git_repository":        tableAzureDevOpsGitRepository(ctx),
 			"azuredevops_git_repository_branch": tableAzureDevOpsGitRepositoryBranch(ctx),
 			"azuredevops_group":                 tableAzureDevOpsGroup(ctx),
