@@ -2,6 +2,7 @@ package azuredevops
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/google/uuid"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/v6/core"
@@ -52,6 +53,13 @@ func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
 				Type:        proto.ColumnType_BOOL,
 			},
 			{
+				Name:        "all_pipelines_authorized",
+				Description: "True if every pipeline in the project may use the service endpoint without being authorized individually.",
+				Type:        proto.ColumnType_BOOL,
+				Hydrate:     getServiceEndpointPipelinePermissions,
+				Transform:   transform.FromField("AllPipelinesAuthorized"),
+			},
+			{
 				Name:        "project_id",
 				Description: "ID of the project this service endpoint belongs to.",
 				Type:        proto.ColumnType_STRING,
@@ -85,6 +93,13 @@ func tableAzureDevOpsServiceEndpoint(_ context.Context) *plugin.Table {
 				Name:        "authorization",
 				Description: "Gets the authorization data for talking to the endpoint.",
 				Type:        proto.ColumnType_JSON,
+			},
+			{
+				Name:        "authorized_pipeline_ids",
+				Description: "IDs of the pipeline definitions individually authorized to use the service endpoint.",
+				Type:        proto.ColumnType_JSON,
+				Hydrate:     getServiceEndpointPipelinePermissions,
+				Transform:   transform.FromField("AuthorizedPipelineIds"),
 			},
 			{
 				Name:        "created_by",
@@ -215,4 +230,55 @@ func getServiceEndpoint(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 	}
 
 	return ServiceEndpoint{*serviceEndpoint, projectId}, nil
+}
+
+const pipelinePermissionsAPIVersion = "7.1-preview.1"
+
+type pipelinePermissions struct {
+	AllPipelinesAuthorized bool
+	AuthorizedPipelineIds  []int
+}
+
+// https://learn.microsoft.com/en-us/rest/api/azure/devops/approvalsandchecks/pipeline-permissions/get
+func getServiceEndpointPipelinePermissions(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	endpoint := h.Item.(ServiceEndpoint)
+	if endpoint.Id == nil {
+		return nil, nil
+	}
+	client, err := restClientFor(ctx, d)
+	if err != nil {
+		plugin.Logger(ctx).Error("azuredevops_serviceendpoint.getServiceEndpointPipelinePermissions", "connection_error", err)
+		return nil, err
+	}
+	perms, err := readPipelinePermissions(ctx, client, endpoint.ProjectId, "endpoint", endpoint.Id.String())
+	if err != nil {
+		plugin.Logger(ctx).Error("azuredevops_serviceendpoint.getServiceEndpointPipelinePermissions", "api_error", err)
+		return nil, err
+	}
+	return perms, nil
+}
+
+func readPipelinePermissions(ctx context.Context, client *restClient, project, resourceType, resourceID string) (*pipelinePermissions, error) {
+	endpoint := projectURL(client.baseURL, project, "pipelines/pipelinepermissions/"+url.PathEscape(resourceType)+"/"+url.PathEscape(resourceID)) +
+		"?" + apiVersion(pipelinePermissionsAPIVersion).Encode()
+	var resp struct {
+		AllPipelines *struct {
+			Authorized bool `json:"authorized"`
+		} `json:"allPipelines"`
+		Pipelines []struct {
+			Id         int  `json:"id"`
+			Authorized bool `json:"authorized"`
+		} `json:"pipelines"`
+	}
+	if err := client.getJSON(ctx, endpoint, scopeBuild, &resp); err != nil {
+		return nil, err
+	}
+	perms := &pipelinePermissions{AuthorizedPipelineIds: []int{}}
+	perms.AllPipelinesAuthorized = resp.AllPipelines != nil && resp.AllPipelines.Authorized
+	for _, p := range resp.Pipelines {
+		if p.Authorized {
+			perms.AuthorizedPipelineIds = append(perms.AuthorizedPipelineIds, p.Id)
+		}
+	}
+	return perms, nil
 }

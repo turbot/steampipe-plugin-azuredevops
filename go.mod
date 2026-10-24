@@ -4,6 +4,7 @@ go 1.26.0
 
 require (
 	github.com/google/uuid v1.6.0
+	github.com/iancoleman/strcase v0.3.0
 	github.com/microsoft/azure-devops-go-api/azuredevops/v6 v6.0.1
 	github.com/turbot/go-kit v1.1.0
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.14.0
@@ -53,7 +54,6 @@ require (
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
-	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

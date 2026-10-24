@@ -46,5 +46,5 @@ func getConnection(ctx context.Context, d *plugin.QueryData) (*azuredevops.Conne
 		return connection, nil
 	}
 
-	return nil, errors.New("'organization_url' and 'personal_access_token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe.")
+	return nil, errors.New("'organization_url' and 'personal_access_token' must be set in the connection configuration; edit your connection configuration file and then restart Steampipe")
 }
