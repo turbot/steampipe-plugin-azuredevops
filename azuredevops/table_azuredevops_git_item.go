@@ -3,7 +3,6 @@ package azuredevops
 import (
 	"context"
 	"errors"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -169,12 +168,11 @@ func listGitItems(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 		return nil, nil
 	}
 
-	connection, err := getConnection(ctx, d)
+	client, err := restClientFor(ctx, d)
 	if err != nil {
 		plugin.Logger(ctx).Error("azuredevops_git_item.listGitItems", "connection_error", err)
 		return nil, err
 	}
-	client := newRestClient(connection.BaseUrl, connection.AuthorizationString)
 
 	err = readGitItems(ctx, client, req, func(item GitItem) bool {
 		d.StreamListItem(ctx, item)
@@ -201,7 +199,7 @@ func readGitItems(ctx context.Context, client *restClient, req gitItemRequest, e
 		params.Set("includeContentMetadata", "true")
 		params.Set("recursionLevel", "none")
 		item := new(GitItem)
-		if err := client.getJSON(ctx, gitItemsURL(client.baseURL, req, params), item); err != nil {
+		if err := client.getJSON(ctx, gitItemsURL(client.baseURL, req, params), scopeCode, item); err != nil {
 			if isRestNotFound(err) {
 				return nil
 			}
@@ -222,7 +220,7 @@ func readGitItems(ctx context.Context, client *restClient, req gitItemRequest, e
 	params.Set("scopePath", scope)
 	params.Set("recursionLevel", "full")
 	list := new(gitItemList)
-	if err := client.getJSON(ctx, gitItemsURL(client.baseURL, req, params), list); err != nil {
+	if err := client.getJSON(ctx, gitItemsURL(client.baseURL, req, params), scopeCode, list); err != nil {
 		if isRestNotFound(err) {
 			return nil
 		}
@@ -272,9 +270,4 @@ func normalizeContent(item *GitItem) {
 	}
 	size := int64(len(*item.Content))
 	item.Size = &size
-}
-
-func isRestNotFound(err error) bool {
-	var statusErr *restStatusError
-	return errors.As(err, &statusErr) && statusErr.StatusCode == http.StatusNotFound
 }

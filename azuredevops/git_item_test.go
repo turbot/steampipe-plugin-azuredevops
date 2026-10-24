@@ -36,8 +36,10 @@ func newFakeADO(t *testing.T, handler func(w http.ResponseWriter, r *http.Reques
 // testClient records the waits it would have made instead of sleeping.
 func (f *fakeADO) client(slept *[]time.Duration) *restClient {
 	now := time.Unix(1_800_000_000, 0)
+	httpClient := f.Client()
+	httpClient.CheckRedirect = noRedirect
 	c := &restClient{
-		http:          f.Client(),
+		http:          httpClient,
 		baseURL:       f.URL + "/myorg",
 		authorization: "Basic dGVzdA==",
 		gate:          &throttleGate{},

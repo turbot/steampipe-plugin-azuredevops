@@ -19,6 +19,9 @@ Service endpoints are a way for Azure DevOps to connect to external systems or s
 
 The `azuredevops_serviceendpoint` table provides insights into Service Endpoints within Azure DevOps. As a DevOps engineer, you can use this table to explore details about Service Endpoints, including their types, authorization details, and associated project details. This table is beneficial for understanding the connections between your Azure DevOps environment and external services.
 
+**Important Notes**
+- The `all_pipelines_authorized` and `authorized_pipeline_ids` columns need the `Build (Read)` scope (`vso.build`) on the personal access token, and make one extra request per service endpoint. Leave them out of the query when you do not need them.
+
 ## Examples
 
 ### Basic info
@@ -168,4 +171,53 @@ select
   json_extract(created_by, '$.imageUrl') as image_url
 from
   azuredevops_serviceendpoint;
+```
+### List service endpoints any pipeline in the project can use
+Find service endpoints open to every pipeline in the project without being authorized one by one.
+
+```sql+postgres
+select
+  id,
+  name,
+  type,
+  project_id
+from
+  azuredevops_serviceendpoint
+where
+  all_pipelines_authorized;
+```
+
+```sql+sqlite
+select
+  id,
+  name,
+  type,
+  project_id
+from
+  azuredevops_serviceendpoint
+where
+  all_pipelines_authorized = 1;
+```
+
+### List service endpoints with the pipelines individually authorized to use them
+Expand the pipeline definitions authorized to use each service endpoint, one row per pipeline.
+
+```sql+postgres
+select
+  e.name,
+  e.type,
+  p as pipeline_id
+from
+  azuredevops_serviceendpoint as e,
+  jsonb_array_elements(e.authorized_pipeline_ids) as p;
+```
+
+```sql+sqlite
+select
+  e.name,
+  e.type,
+  p.value as pipeline_id
+from
+  azuredevops_serviceendpoint as e,
+  json_each(e.authorized_pipeline_ids) as p;
 ```
