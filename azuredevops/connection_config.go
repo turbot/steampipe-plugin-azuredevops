@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/microsoft/azure-devops-go-api/azuredevops/v6"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v6/plugin"
 )
 
 type azureDevOpsConfig struct {
@@ -19,11 +19,11 @@ func ConfigInstance() interface{} {
 }
 
 func GetConfig(connection *plugin.Connection) azureDevOpsConfig {
-	if connection == nil || connection.Config == nil {
+	if connection == nil || connection.GetConfig() == nil {
 		return azureDevOpsConfig{}
 	}
 
-	config, _ := connection.Config.(azureDevOpsConfig)
+	config, _ := connection.GetConfig().(azureDevOpsConfig)
 
 	return config
 }
@@ -46,5 +46,5 @@ func getConnection(ctx context.Context, d *plugin.QueryData) (*azuredevops.Conne
 		return connection, nil
 	}
 
-	return nil, errors.New("'organization_url' and 'personal_access_token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe.")
+	return nil, errors.New("'organization_url' and 'personal_access_token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
 }
